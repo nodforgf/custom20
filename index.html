@@ -1338,6 +1338,24 @@
         heartContainer.addEventListener('mousedown', startHolding);
         document.addEventListener('mouseup', stopHolding);
         
+        // Unlock audio บนมือถือตั้งแต่แตะครั้งแรก (iOS/Android ต้องการ)
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            audioUnlocked = true;
+            const bgMusic = document.getElementById('backgroundMusic');
+            if (bgMusic) {
+                bgMusic.volume = 0;
+                bgMusic.play().then(() => {
+                    bgMusic.pause();
+                    bgMusic.currentTime = 0;
+                    bgMusic.volume = 0.5;
+                }).catch(() => {});
+            }
+        }
+        document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+        document.addEventListener('mousedown', unlockAudio, { once: true, passive: true });
+
         heartContainer.addEventListener('touchstart', startHolding, { passive: false });
         document.addEventListener('touchend', stopHolding);
 
