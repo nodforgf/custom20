@@ -1217,9 +1217,9 @@
             experienceStarted = true;
             experienceStartMs = performance.now();
             startOverlay.classList.add('hidden');
-            // เล่นเพลงทันทีใน gesture context
+            // เล่นเพลงถ้ายังไม่ได้เล่น (กรณี fallback)
             const bgMusic = document.getElementById('backgroundMusic');
-            if (bgMusic) {
+            if (bgMusic && bgMusic.paused) {
                 bgMusic.volume = 0.5;
                 bgMusic.play().catch(() => {});
             }
@@ -1297,9 +1297,11 @@
                     clearInterval(holdTimer);
                     holdInstruction.textContent = "WARPING TO GALAXY! 💕";
                     
+                    // เล่นเพลงทันทีใน gesture context (สำคัญมากสำหรับมือถือ)
                     const bgMusic = document.getElementById('backgroundMusic');
                     if (bgMusic) {
-                        bgMusic.play().catch(err => console.log("Music auto-play blocked:", err));
+                        bgMusic.volume = 0.5;
+                        bgMusic.play().catch(err => console.log("Music blocked:", err));
                     }
                     
                     setTimeout(() => {
